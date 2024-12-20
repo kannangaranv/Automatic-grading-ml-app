@@ -1,0 +1,59 @@
+# Byte-compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.env/
+.envrc
+.venv/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Editor and OS files
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# Logs and debug files
+*.log
+*.out
+*.err
+
+# Test coverage
+htmlcov/
+.coverage
+.tox/
+.nox/
+.pytest_cache/
+.cache/
+
+# Distribution and packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Environment variables and secrets
+.env.local
+.env.production
+.secrets
+
+# MyPy, Pylint, and other linting reports
+.mypy_cache/
+.pyre/
+.pytype/
+.pylint.d/
+.sorcery/
+
+# Docker
+docker-compose.override.yml
+
+# Deployment files
+*.pem
+*.key
