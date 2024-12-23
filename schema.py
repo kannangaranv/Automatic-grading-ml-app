@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 # class GradingRequest(BaseModel):
 #     task_type: str
@@ -28,3 +28,7 @@ class Choice(BaseModel):
 
 class GradingResponse(BaseModel):
     choices: List[Choice]
+
+class ChatBotRequest(BaseModel):
+    collections: List[str]
+    conversation: List[Dict[str, str]]
