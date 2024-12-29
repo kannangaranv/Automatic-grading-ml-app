@@ -88,8 +88,16 @@ def grade_writing_task(request: GradingRequest):
     )
 
     user_message_content = (
-        f"Please grade the student's answer and provide the result (score) and feedback in the following JSON format: \n"
-        f"{{ \"result\": [score], \"feedback\": {{\"message\": [feedback]}}, \"resource_citations\": [] }}\n\n"
+        f"Please grade the student's answer and provide the result (band score) and feedback in the following JSON format: \n"
+        f"{{\n"
+        f"  \"result\": [band_score],\n"
+        f"  \"feedback\": {{\n"
+        f"    \"reason\": [why the user got this band score],\n"
+        f"    \"improvement\": [how to improve to the desired band score],\n"
+        f"    \"sample_answer\": [an example of a high-quality answer]\n"
+        f"  }},\n"
+        f"  \"resource_citations\": []\n"
+        f"}}\n\n"
         f"Here is the task description:\n{task_description}"
     )
 
@@ -104,14 +112,27 @@ def grade_writing_task(request: GradingRequest):
             parsed_response = json.loads(response.content)
             print("Parsed response: ", parsed_response)
 
-            # Ensure types match Java expectations
-            result = float(parsed_response.get("result", 0))
-            feedback = parsed_response.get("feedback", "No feedback provided")
+            # Extract and validate response components
+            band_score = float(parsed_response.get("result", 0))
+            feedback = parsed_response.get("feedback", {})
             resource_citations = parsed_response.get("resource_citations", [])
 
+            if not isinstance(feedback, dict):
+                raise HTTPException(status_code=500, detail="Invalid feedback format")
+
+            # Convert band score to percentage
+            percentage = round((band_score / 9.0) * 100, 2)
+
+            # Format the feedback
+            formatted_feedback = {
+                "reason": feedback.get("reason", "No reason provided."),
+                "improvement": feedback.get("improvement", "No improvement suggestions provided."),
+                "sample_answer": feedback.get("sample_answer", "No sample answer provided.")
+            }
+
             return {
-                "result": result,
-                "feedback": feedback,
+                "result": percentage,
+                "feedback": formatted_feedback,
                 "resource_citations": resource_citations
             }
         else:
